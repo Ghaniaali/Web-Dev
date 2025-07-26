@@ -17,36 +17,50 @@
 
     <div class="card p-4 shadow-lg">
 
-        <form id="registrationform">
+        <form id="registrationform" name="myform">
+
         <div class="row justify-content-center">
+
             <div class="col-md-6">
-                    <label for="fname" class="bold-label">First Name:</label>
-                    <input type="text" id="fname" class="form-control form-control-lg mb-3" placeholder="First Name" required>
+                <div class="form-floating">
+                    <input type="text" id="fname" class="form-control form-control-lg mb-3" placeholder="First Name" required minlength="2" maxlength="20">
+                     <label for="fname" class="bold-label">First Name:</label>
+                </div>
             </div>
 
             <div class="col-md-6">
-                    <label for="lname" class="bold-label">Last Name:</label>
-                    <input type="text" id="lname" class="form-control form-control-lg mb-3" placeholder="Last Name" required>
+                <div class="form-floating">
+                    <input type="text" id="lname" class="form-control form-control-lg mb-3" placeholder="Last Name" required minlength="2" maxlength="20">
+                     <label for="lname" class="bold-label">Last Name:</label>
+                </div>
             </div>
 
             <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="email" id="email" class="form-control form-control-lg mb-3" placeholder="abc@example.com" name="emailadd"required>
                     <label for="email" class="bold-label">Email:</label>
-                    <input type="email" id="email" class="form-control form-control-lg mb-3" placeholder="abc@example.com" required>
+                </div>
             </div>
 
              <div class="col-md-6">
-                    <label for="bdate" class="bold-label">DOB:</label>
+                <div class="form-floating">
                     <input type="date" id="bdate" class="form-control form-control-lg mb-3" placeholder="1995-06-12" required>
+                     <label for="bdate" class="bold-label">DOB:</label>
+                </div>
              </div>
 
              <div class="col-md-6">
-                    <label for="age" class="bold-label">Age:</label>
+                 <div class="form-floating">
                     <input type="number" id="age" class="form-control form-control-lg mb-3" placeholder="30" required>
+                    <label for="age" class="bold-label">Age:</label>
+                 </div>
              </div>
 
               <div class="col-md-6">
-                    <label for="cnic" class="bold-label">CNIC:</label>
-                    <input type="text" id="cnic" class="form-control form-control-lg mb-3" placeholder="12345-6789012-3" required>
+                 <div class="form-floating">
+                    <input type="text" id="cnic" class="form-control form-control-lg mb-3" placeholder="12345-6789012-3" maxlength="13" required>
+                      <label for="cnic" class="bold-label">CNIC:</label>
+                 </div>
               </div>
 
                    <label class="bold-label">Gender:</label>
@@ -69,14 +83,20 @@
 
                     <div class="text-center">
                     <input type="submit"  id="button" value="Submit" class="btn btn-primary btn-lg">
+                    <input type="button" value="Clear" class="btn btn-secondary btn-lg" onclick="clearform()">
                     </div>
 
                     </div>
-                 </div>
+                  </div>
                 </form>
+              </div>
             </div>
-    
-        </div>
+
+      <div>
+      <h3 class="text-black">User Data in JSON:</h3>
+      <pre id="jsonoutput" ></pre>
+      </div>
+
         <script src="script.js"></script>
 </body>
 </html>
