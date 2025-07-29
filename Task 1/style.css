@@ -27,4 +27,7 @@ input.form-control {
     padding: 10px;
 }
 
+#userContainer{
+    display: none;
+}
 
