@@ -1,3 +1,7 @@
+const arr = [];
+let editIndex = -1;
+
+
 document.getElementById("registrationform").addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -17,11 +21,64 @@ document.getElementById("registrationform").addEventListener("submit", function 
       cnic: cnic,
     };
 
+     if (editIndex === -1) {
+         arr.push(userData); 
+       } else {
+         arr[editIndex] = userData; 
+         editIndex = -1;
+       }
+
     const jsonoutput = document.getElementById("jsonoutput");
     jsonoutput.textContent = JSON.stringify(userData, null, 2);
     document.getElementById("registrationform").reset();
 
+    document.getElementById("info").click();
+
   });
+
+
+  document.getElementById("info").addEventListener( "click" , function() {
+    const tableContainer = document.getElementById("userContainer");
+
+    let HTMLtable = '<table class="table table-bordered table-striped">';
+    HTMLtable += ' <thead class= "table-black"> <tr> <th>Name</th> <th>Email</th> <th>DOB</th> <th>Age</th> <th>Gender</th> <th>CNIC</th> </tr> </thead> '
+    HTMLtable += '<tbody>';
+
+    arr.forEach((userData, index) => {
+       HTMLtable += ` <tr> <td>${userData.name}</td> <td>${userData.email}</td> <td>${userData.dob}</td> <td>${userData.age}</td> <td>${userData.gender}</td> <td>${userData.cnic}</td> <td> <button class="btn btn-sm btn-warning" onclick="editUser(${index})"> Edit </button>  <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})"> Delete </button> </td> </tr> `;
+    });
+
+
+     HTMLtable += '</tbody> </table>';
+     tableContainer.innerHTML = HTMLtable;
+     tableContainer.style.display = "block"; 
+     
+  });
+
+ window.editUser = function(index) {
+    const user = arr[index];
+    const nameParts = user.name.split(" ");
+    document.getElementById("fname").value = nameParts[0];
+    document.getElementById("lname").value = nameParts.slice(1).join(" ");
+    document.getElementById("email").value = user.email;
+    document.getElementById("bdate").value = user.dob;
+    document.getElementById("age").value = user.age;
+    document.getElementById("cnic").value = user.cnic;
+    document.querySelector(`input[name="gender"][value="${user.gender}"]`).checked = true;
+
+    editIndex = index;
+};
+
+window.deleteUser = function(index) {
+    if (confirm("Are you sure you want to delete this user?")) {
+        arr.splice(index, 1); 
+        document.getElementById("info").click(); 
+    }
+
+    if (arr.length === 0) {
+    document.getElementById("userContainer").style.display = "none";
+}
+};
 
    function clearform(){
         document.getElementById("registrationform").reset();
@@ -59,5 +116,3 @@ document.getElementById("registrationform").addEventListener("submit", function 
         return false;
       }
     }
-
-  
