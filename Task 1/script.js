@@ -1,6 +1,7 @@
-const arr = [];
-let editIndex = -1;
 
+let editIndex = -1;
+let savedUsers = localStorage.getItem("users");
+let arr = savedUsers ? JSON.parse(savedUsers) : [];
 
 document.getElementById("registrationform").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -28,19 +29,18 @@ document.getElementById("registrationform").addEventListener("submit", function 
          editIndex = -1;
        }
 
+    localStorage.setItem("users", JSON.stringify(arr));
     const jsonoutput = document.getElementById("jsonoutput");
     jsonoutput.textContent = JSON.stringify(userData, null, 2);
     document.getElementById("registrationform").reset();
-
-    document.getElementById("info").click();
-
   });
 
 
   document.getElementById("info").addEventListener( "click" , function() {
-    const tableContainer = document.getElementById("userContainer");
+    const tableWrapper = document.getElementById("userContainer");
+    const tableContainer = document.getElementById("tableContent");
 
-    let HTMLtable = '<table class="table table-bordered table-striped">';
+    let HTMLtable = '<table class="table table-bordered table-striped align-middle text-center">';
     HTMLtable += ' <thead class= "table-black"> <tr> <th>Name</th> <th>Email</th> <th>DOB</th> <th>Age</th> <th>Gender</th> <th>CNIC</th> </tr> </thead> '
     HTMLtable += '<tbody>';
 
@@ -48,10 +48,9 @@ document.getElementById("registrationform").addEventListener("submit", function 
        HTMLtable += ` <tr> <td>${userData.name}</td> <td>${userData.email}</td> <td>${userData.dob}</td> <td>${userData.age}</td> <td>${userData.gender}</td> <td>${userData.cnic}</td> <td> <button class="btn btn-sm btn-warning" onclick="editUser(${index})"> Edit </button>  <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})"> Delete </button> </td> </tr> `;
     });
 
-
      HTMLtable += '</tbody> </table>';
      tableContainer.innerHTML = HTMLtable;
-     tableContainer.style.display = "block"; 
+     tableWrapper.style.display = "block";
      
   });
 
@@ -72,9 +71,9 @@ document.getElementById("registrationform").addEventListener("submit", function 
 window.deleteUser = function(index) {
     if (confirm("Are you sure you want to delete this user?")) {
         arr.splice(index, 1); 
+        localStorage.setItem("users", JSON.stringify(arr));
         document.getElementById("info").click(); 
     }
-
     if (arr.length === 0) {
     document.getElementById("userContainer").style.display = "none";
 }
@@ -93,17 +92,24 @@ window.deleteUser = function(index) {
         }
     });
 
-     document.getElementById("lname").addEventListener('keydown', function(event) {
+   document.getElementById("lname").addEventListener('keydown', function(event) {
         if (event.key >= '0' && event.key <= '9') {
             event.preventDefault();
         }
     });
 
-    document.getElementById("cnic").addEventListener('keydown', function(event) {
-        if ((event.key >= 'a' && event.key <= 'z') || (event.key >= 'A' && event.key <= 'Z')){
-            event.preventDefault();
-        }
-    });
+   document.getElementById("cnic").addEventListener('keydown', function(event) {
+  if ((event.key >= '0' && event.key <= '9') || 
+    event.key === 'Backspace' || 
+    event.key === 'ArrowLeft' || 
+    event.key === 'ArrowRight' ||
+    event.key === 'Delete' ||
+    event.key === 'Tab'
+  ) {
+  } else {
+    event.preventDefault(); 
+  }
+});
 
    function ValidateEmail() {
       let email = document.forms["myform"]["emailadd"].value;
