@@ -31,3 +31,11 @@ input.form-control {
     display: none;
 }
 
+th.sort:hover {
+  cursor: pointer;
+  background-color: #343232;
+}
+
+#pagination button.btn {
+  margin: 2px !important;
+}
