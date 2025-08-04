@@ -1,5 +1,8 @@
 
 let editIndex = -1;
+let currentPage = 1;
+const usersPerPage = 5;
+let sortDirection = {};
 let savedUsers = localStorage.getItem("users");
 let arr = savedUsers ? JSON.parse(savedUsers) : [];
 
@@ -33,26 +36,88 @@ document.getElementById("registrationform").addEventListener("submit", function 
     const jsonoutput = document.getElementById("jsonoutput");
     jsonoutput.textContent = JSON.stringify(userData, null, 2);
     document.getElementById("registrationform").reset();
+    currentPage = Math.ceil(arr.length / usersPerPage);    
+    Displaytable(); 
   });
 
-
-  document.getElementById("info").addEventListener( "click" , function() {
-    const tableWrapper = document.getElementById("userContainer");
-    const tableContainer = document.getElementById("tableContent");
-
-    let HTMLtable = '<table class="table table-bordered table-striped align-middle text-center">';
-    HTMLtable += ' <thead class= "table-black"> <tr> <th>Name</th> <th>Email</th> <th>DOB</th> <th>Age</th> <th>Gender</th> <th>CNIC</th> </tr> </thead> '
-    HTMLtable += '<tbody>';
-
-    arr.forEach((userData, index) => {
-       HTMLtable += ` <tr> <td>${userData.name}</td> <td>${userData.email}</td> <td>${userData.dob}</td> <td>${userData.age}</td> <td>${userData.gender}</td> <td>${userData.cnic}</td> <td> <button class="btn btn-sm btn-warning" onclick="editUser(${index})"> Edit </button>  <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})"> Delete </button> </td> </tr> `;
+  document.getElementById("info").addEventListener("click", function () {
+     currentPage = 1;    
+      Displaytable();
     });
 
-     HTMLtable += '</tbody> </table>';
-     tableContainer.innerHTML = HTMLtable;
-     tableWrapper.style.display = "block";
-     
+function Displaytable() {
+  const tableWrapper = document.getElementById("userContainer");
+  const tableContainer = document.getElementById("tableContent");
+  const paginationContainer = document.getElementById("pagination");
+  tableWrapper.style.display = "block";
+
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const endIndex = startIndex + usersPerPage;
+  const currentUsers = arr.slice(startIndex, endIndex);
+
+  let HTMLtable = `<table id="myTable" class="table table-bordered table-striped align-middle text-center">
+    <thead class="table-dark">
+      <tr>
+        <th class="sort" onclick="sortTable(0)">Name</th>
+        <th class="sort" onclick="sortTable(1)">Email</th>
+        <th class="sort" onclick="sortTable(2)">CNIC</th>
+        <th class="sort" onclick="sortTable(3)">DOB</th>
+        <th class="sort" onclick="sortTable(4)">Age</th>
+        <th class="sort" onclick="sortTable(5)">Gender</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+  currentUsers.forEach((userData, index) => {
+    let realIndex = startIndex + index;
+    HTMLtable += `<tr>
+      <td>${userData.name}</td>
+      <td>${userData.email}</td>
+      <td>${userData.cnic}</td>
+      <td>${userData.dob}</td>
+      <td>${userData.age}</td>
+      <td>${userData.gender}</td>
+      <td>
+        <button class="btn btn-sm btn-warning" onclick="editUser(${realIndex})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteUser(${realIndex})">Delete</button>
+      </td>
+    </tr>`;
   });
+
+  HTMLtable += '</tbody></table>';
+  tableContainer.innerHTML = HTMLtable;
+
+  generatePagination();
+}
+
+function generatePagination() {
+  const paginationContainer = document.getElementById("pagination");
+  paginationContainer.innerHTML = "";
+
+  const totalPages = Math.ceil(arr.length / usersPerPage);
+
+  if (totalPages <= 1) return;
+
+  let buttonsHTML = "";
+
+  buttonsHTML += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+
+  for (let i = 1; i <= totalPages; i++) {
+    buttonsHTML += `<button onclick="changePage(${i})" ${i === currentPage ? 'disabled' : ''}>${i}</button>`;
+  }
+
+  buttonsHTML += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+
+  paginationContainer.innerHTML = buttonsHTML;
+}
+
+window.changePage = function (page) {
+  const totalPages = Math.ceil(arr.length / usersPerPage);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  Displaytable();
+};
 
  window.editUser = function(index) {
     const user = arr[index];
@@ -72,11 +137,57 @@ window.deleteUser = function(index) {
     if (confirm("Are you sure you want to delete this user?")) {
         arr.splice(index, 1); 
         localStorage.setItem("users", JSON.stringify(arr));
-        document.getElementById("info").click(); 
+
+        const totalPages = Math.ceil(arr.length / usersPerPage);
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        if (arr.length === 0) {
+            document.getElementById("userContainer").style.display = "none";
+        } else {
+            Displaytable();
+        }
     }
-    if (arr.length === 0) {
-    document.getElementById("userContainer").style.display = "none";
-}
+};
+
+function SearchTable() {
+      const input = document.getElementById("myInput").value.toUpperCase();
+      const table = document.getElementById("myTable");
+      const tr = table.getElementsByTagName("tr");
+
+      for (let i = 1; i < tr.length; i++) {
+        const name = tr[i].getElementsByTagName("td")[0]?.textContent.toUpperCase() || "";
+        const email = tr[i].getElementsByTagName("td")[1]?.textContent.toUpperCase() || "";
+        const cnic = tr[i].getElementsByTagName("td")[2]?.textContent.toUpperCase() || "";
+
+        if (name.includes(input) || email.includes(input) || cnic.includes(input)) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+
+  window.sortTable = function (columnIndex) {
+  const keyMap = ["name", "email", "cnic", "dob", "age", "gender"];
+  const key = keyMap[columnIndex];
+
+  const dir = sortDirection[columnIndex] === "asc" ? "desc" : "asc";
+  sortDirection[columnIndex] = dir;
+
+  arr.sort((a, b) => {
+    let valA = a[key];
+    let valB = b[key];
+
+    if (typeof valA === "string") valA = valA.toLowerCase();
+    if (typeof valB === "string") valB = valB.toLowerCase();
+
+    if (dir === "asc") return valA > valB ? 1 : valA < valB ? -1 : 0;
+    else return valA < valB ? 1 : valA > valB ? -1 : 0;
+  });
+
+  localStorage.setItem("users", JSON.stringify(arr)); 
+  Displaytable(); 
 };
 
    function clearform(){
