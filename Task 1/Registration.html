@@ -97,8 +97,11 @@
              <div class="card p-4 shadow-lg">
                  <div class="row justify-content-center">
                      <div class="col-md-12">
-                     <div id="tableContent">
-                     </div> 
+                     <input type="text" id="myInput" onkeyup="SearchTable()" class="form-control mb-3" placeholder="Search by Name, Email or CNIC">
+                     <div id="tableContent"></div>
+                     <div id="pagination" class="text-center mt-3"> 
+                        <button class="btn btn-sm btn-light mx-1">1</button> 
+                     </div>
                     </div>
                  </div>
              </div>
