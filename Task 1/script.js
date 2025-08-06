@@ -40,6 +40,61 @@ document.getElementById("registrationform").addEventListener("submit", function 
     Displaytable(); 
   });
 
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    const data = arr; 
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users.json"; 
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+});
+
+document.getElementById("importBtn").addEventListener("click", function () {
+    document.getElementById("importInput").click();
+});
+
+document.getElementById("importInput").addEventListener("change", async function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+        const jsonString = await readFileAsText(file); 
+        const importedData = JSON.parse(jsonString);
+
+        if (!Array.isArray(importedData)) {
+            alert("Invalid JSON format");
+            return;
+        }
+
+        const shouldMerge = confirm("Do you want to merge with existing users?\nOK = Merge\nCancel = Replace");
+        arr = shouldMerge ? arr.concat(importedData) : importedData;
+
+        localStorage.setItem("users", JSON.stringify(arr));
+        currentPage = 1;
+        Displaytable();
+
+        alert("Users imported successfully!");
+    } catch (error) {
+        console.error("Error reading JSON file:", error);
+        alert("Failed to import JSON file: " + error.message);
+    }
+});
+
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(file);
+    });
+}
+
   document.getElementById("info").addEventListener("click", function () {
      currentPage = 1;    
       Displaytable();
