@@ -1,0 +1,24 @@
+<form (submit)="login()" autocomplete="off" class="form">
+    <h1 class="text">Login</h1>
+
+    <div class="col">
+    <div class="form-floating mb-3">
+        <input type="text" id="usernameoremail" class="form-control form-control-lg mb-3" placeholder="Username or Email" required minlength="2" maxlength="100">
+        <label for="usernameoremail">Username or Email</label>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="form-floating mb-3">
+        <input type="password" id="password" class="form-control form-control-lg mb-3" placeholder="Password" required>
+        <label for="password">Password</label>
+    </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+
+    <p class="text-center">
+      Don’t have an account?
+      <button type="button" class="btn btn-success p-0" (click)="goToSignup()">Sign Up</button>
+    </p>
+</form>

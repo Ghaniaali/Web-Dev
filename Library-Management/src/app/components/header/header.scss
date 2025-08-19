@@ -1,0 +1,15 @@
+.Header{
+    background-color: #eaa5af;
+    padding:24px 32px;
+    box-shadow: 0 4px 6px rgba(193, 99, 99, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.text{
+    font: 1.5rem montserrat;
+    font-weight: 300;
+}
