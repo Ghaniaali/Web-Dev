@@ -1,15 +1,15 @@
-.Header{
-    background-color: #ffffff;
-    padding:24px 32px;
-    box-shadow: 0 4px 6px rgba(193, 99, 99, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+.Header {
+  background: #8b5cf6;
+  padding: 16px 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+}
+.Header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.text{
-    font: 1.5rem montserrat;
-    font-weight: 300;
-}

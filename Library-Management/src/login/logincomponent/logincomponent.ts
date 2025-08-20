@@ -18,6 +18,9 @@ login() {
   
   const users = JSON.parse(localStorage.getItem('users') || '[]');
 
+  console.log("Stored users:", users); // Debugging log
+  console.log("Entered:", this.usernameOrEmail, this.password);
+
   const validUser = users.find((user: any) =>
     (user.username === this.usernameOrEmail || user.email === this.usernameOrEmail) &&
     user.password === this.password
@@ -32,9 +35,8 @@ login() {
   }
 }
 
-goToSignup() {
+  goToSignup() {
   this.router.navigate(['/signup']);
 }
-
 
 }
