@@ -1,49 +1,80 @@
 <div class="signup-page">
-<div class="card-container">
-<div class="left-panel">
-    <div class="signup-box">
+  <div class="card-container">
+    
+    <div class="left-panel">
+      <div class="signup-box">
         <h2>Signup</h2>
         <p class="mb-4">Enter your account details to signup</p>
+
         <form (ngSubmit)="signup()" autocomplete="off" class="form">
-        
-    <div class="col">
-    <div class="form-floating mb-3">
-        <input type="text" id="username" class="form-control form-control-lg mb-3" placeholder="Username" required [(ngModel)]="username" minlength="2" maxlength="20">
-        <label for="username">Username</label>
-    </div>
-    </div>
+          
+          <div class="col">
+            <div class="form-floating mb-3">
+              <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                class="form-control form-control-lg mb-3"
+                placeholder="Username"
+                required 
+                minlength="2" 
+                maxlength="20"
+                [(ngModel)]="username">
+              <label for="username">Username</label>
+            </div>
+          </div>
 
-    <div class="col">
-    <div class="form-floating mb-3">
-        <input type="text" id="email" class="form-control form-control-lg mb-3" placeholder="Email"  [(ngModel)]="email" required minlength="2" maxlength="100">
-        <label for="email">Email</label>
-    </div>
-    </div>
+          <div class="col">
+            <div class="form-floating mb-3">
+              <input 
+                type="text" 
+                id="email" 
+                name="email" 
+                class="form-control form-control-lg mb-3"
+                placeholder="Email"
+                required 
+                minlength="2" 
+                maxlength="20"
+                [(ngModel)]="email">
+              <label for="email">Email</label>
+            </div>
+          </div>
 
-    <div class="col">
-    <div class="form-floating mb-3">
-        <input type="password" id="password" class="form-control form-control-lg mb-3" placeholder="Password" [(ngModel)]="password" required>
-        <label for="password">Password</label>
-    </div>
-    </div>
+          <div class="col">
+            <div class="form-floating mb-3">
+              <input type="password" 
+                id="password" 
+                name="password"  
+                class="form-control form-control-lg mb-3"
+                placeholder="Password"
+                required
+                [(ngModel)]="password"
+                minlength="6"
+                maxlength="20">
+              <label for="password">Password</label>
+            </div>
+          </div>
 
-    <button type="submit" class="btn btn-login w-100 mb-3">Signup</button>
- </form>
+          <button type="submit" class="btn btn-login w-100 mb-3">Signup</button>
+        </form>
 
- <div class="footer-actions">
-     <span>Already have an account?</span>
-      <button class="btn btn-signup w-100" (click)="goToLogin()">Login</button>
+        <div class="footer-actions">
+          <span>Already have an account?</span>
+          <button class="btn btn-signup w-100" (click)="goToLogin()">Login</button>
         </div>
       </div>
     </div>
-       
-  <div class="right-panel">
-    <h1 class="fw-bold">Welcome to<br>Library Management System</h1>
-    <p>Signup to explore the library</p>
-    <div class="illustration mt-4">
-        <img src="Assets/images/student.jpg" alt="Student Illustration" class="rounded" width="300" height="300">
+
+    <div class="right-panel">
+      <h1 class="fw-bold">Welcome to<br>Library Management System</h1>
+      <p>Signup to explore the library</p>
+      <div class="illustration mt-4">
+        <img src="Assets/images/student.jpg" 
+             alt="Student Illustration" 
+             class="rounded" 
+             width="300" 
+             height="300">
       </div>
     </div>
   </div>
 </div>
-

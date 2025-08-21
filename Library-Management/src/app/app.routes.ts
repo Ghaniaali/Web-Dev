@@ -3,10 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Logincomponent } from '../login/logincomponent/logincomponent';
 import { Signupcomponent } from '../signup/signupcomponent/signupcomponent';
+import { DashboardComponent } from '../dashboard/dashboardcomponent/dashboard.component'; 
+
 
 export const routes: Routes = [
   { path: 'login', component: Logincomponent },
   { path: 'signup', component: Signupcomponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 

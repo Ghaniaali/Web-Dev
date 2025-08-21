@@ -17,27 +17,30 @@ constructor(private router: Router) {}
 
 login(){
 
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-    const enteredUser = (this.usernameOrEmail || '').trim();
-    const enteredPass = (this.password || '').trim();
+const enteredUser = (this.usernameOrEmail || '').trim();
+const enteredPass = (this.password || '').trim();
 
-    const validUser = users.find(
-      (user: any) =>
-        (user.username === enteredUser || user.email === enteredUser) &&
-        user.password === enteredPass
-    );
 
-    if (validUser) {
-      alert(` Welcome back, ${validUser.username}!`);
-      localStorage.setItem('loggedInUser', JSON.stringify(validUser));
-      this.router.navigate(['/dashboard']);
-    } else {
-      alert(" Credentials not found. Please sign up first.");
-    }
-  }
+const existingUser = users.find(
+  (user: any) =>
+    user.username === enteredUser || user.email === enteredUser
+);
 
-   goToSignup() {
-    this.router.navigate(['/signup']);
-  }
+if (!existingUser) {
+  alert("User not found. Please sign up first.");
+} else if (existingUser.password !== enteredPass) {
+  alert("Incorrect password. Please try again.");
+} else {
+  alert(`Welcome back, ${existingUser.username}!`);
+  localStorage.setItem('loggedInUser', JSON.stringify(existingUser));
+  this.router.navigate(['/dashboardcomponent']);
+}
+}
+
+goToSignup() {
+  this.router.navigate(['/signup']);
+}
+
 }
