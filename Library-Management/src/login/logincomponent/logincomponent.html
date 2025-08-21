@@ -6,17 +6,17 @@
         <p class="mb-4">Enter your account details</p>
 
         
-   <form (submit)="login()" autocomplete="off" class="form">
+   <form (ngSubmit)="login()" autocomplete="off" class="form">
     <div class="mb-3">
     <div class="form-floating mb-3">
-        <input type="text" id="usernameoremail" class="form-control form-control-lg mb-3" placeholder="Username or Email" required minlength="2" maxlength="100">
+        <input type="text" id="usernameoremail" class="form-control form-control-lg mb-3" placeholder="Username or Email" [(ngModel)]="usernameOrEmail" required minlength="2" maxlength="100">
         <label for="usernameoremail">Username or Email</label>
     </div>
     </div>
 
     <div class="mb-3">
     <div class="form-floating mb-3">
-        <input type="password" id="password" class="form-control form-control-lg mb-3" placeholder="Password" required>
+        <input type="password" id="password" class="form-control form-control-lg mb-3" placeholder="Password" [(ngModel)]="password" required>
         <label for="password">Password</label>
     </div>
     </div>
