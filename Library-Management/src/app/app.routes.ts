@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Logincomponent } from '../login/logincomponent/logincomponent';
 import { Signupcomponent } from '../signup/signupcomponent/signupcomponent';
-import { DashboardComponent } from '../dashboard/dashboardcomponent/dashboard.component'; 
+import { DashboardComponent } from './pages/dashboard/dashboard';
 
 
 export const routes: Routes = [

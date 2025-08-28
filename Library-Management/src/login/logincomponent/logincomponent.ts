@@ -35,7 +35,7 @@ if (!existingUser) {
 } else {
   alert(`Welcome back, ${existingUser.username}!`);
   localStorage.setItem('loggedInUser', JSON.stringify(existingUser));
-  this.router.navigate(['/dashboardcomponent']);
+  this.router.navigate(['/dashboard']);
 }
 }
 
