@@ -1,15 +1,56 @@
-.Header {
-  background: #8b5cf6;
-  padding: 16px 32px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  display: flex;
-  color: white;
-  font-family: "Segoe UI", sans-serif;
-}
-.Header h2 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
+.header {
+      background-color: #8b5cf6;
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+    }
+    
+    .logo {
+      text-align: left;
+      flex-shrink: 0;
+    }
+    
+    .logo h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .welcome-text {
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: #7946ef;
+      color: white;
+      border: 1px solid #8b62ea;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background-color: #8b62ea;
+    }

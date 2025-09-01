@@ -1,3 +1,8 @@
-<app-header> </app-header>
-<router-outlet></router-outlet>
+<app-header (sidebarToggle)="onSidebarToggle()"></app-header>
+<app-sidebar [isOpen]="isSidebarOpen" (sidebarClose)="onSidebarClose()"></app-sidebar>
+
+<div class="main-layout" [class.sidebar-open]="isSidebarOpen">
+  <router-outlet></router-outlet>
+</div>
+
 <app-footer></app-footer>

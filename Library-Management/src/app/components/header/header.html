@@ -1,5 +1,19 @@
-<div class="Header">
-  <h2>Library Management System</h2>
-</div>
-
-
+ <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <button 
+            *ngIf="isDashboardRoute && (authService.isLoggedIn$ | async)" 
+            class="sidebar-toggle-btn" 
+            (click)="toggleSidebar()">
+            ☰
+          </button>
+          <div class="logo">
+            <h2>Library Management System</h2>
+          </div>
+        </div>
+        <div class="header-actions" *ngIf="authService.isLoggedIn$ | async">
+          <span class="welcome-text">Welcome, {{ getCurrentUser()?.username }}!</span>
+          <button (click)="logout()" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </header>

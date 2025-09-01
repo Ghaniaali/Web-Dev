@@ -1,0 +1,45 @@
+<div class="sidebar" [class.sidebar-open]="isOpen" [class.sidebar-closed]="!isOpen">
+      <div class="sidebar-content">
+        <div class="sidebar-header">
+          <h3>Menu</h3>
+          <button class="close-btn" (click)="closeSidebar()">×</button>
+        </div>
+        
+        <nav class="sidebar-nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-link" (click)="navigateTo('/dashboard')">
+                <span class="nav-icon">📊</span>
+                Dashboard
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" (click)="navigateTo('/books')">
+                <span class="nav-icon">📚</span>
+                Books
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" (click)="navigateTo('/users')">
+                <span class="nav-icon">👥</span>
+                Users
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" (click)="navigateTo('/roles')">
+                <span class="nav-icon">🔑</span>
+                Roles
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" (click)="navigateTo('/reports')">
+                <span class="nav-icon">📈</span>
+                Reports
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-overlay" [class.show]="isOpen" (click)="closeSidebar()"></div>
+    </div>

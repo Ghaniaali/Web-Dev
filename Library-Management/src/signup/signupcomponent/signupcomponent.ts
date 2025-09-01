@@ -1,63 +1,53 @@
+// src/signup/signupcomponent/signupcomponent.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../app/services/auth.service/auth.service';
 
 @Component({
   selector: 'app-signupcomponent',
-   standalone: true,
+  standalone: true,
   imports: [FormsModule],
   templateUrl: './signupcomponent.html',
   styleUrl: './signupcomponent.scss'
 })
 export class Signupcomponent {
-email: string = '';     
-username: string = '';   
-password: string = '';   
+  username: string = '';
+  email: string = '';
+  password: string = '';
 
-constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-signup() {
-  // Get users from localStorage, or start with an empty array
-  let users: { username: string; email: string; password: string }[] = 
-    JSON.parse(localStorage.getItem('users') || '[]');
+  signup() {
+  
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    const existingUser = users.find((user: any) => 
+      user.username === this.username || user.email === this.email
+    );
 
-  // Check for duplicates
-  const existingUser = users.find(
-    (u) =>
-      u.email.toLowerCase() === this.email.trim().toLowerCase() ||
-      u.username.toLowerCase() === this.username.trim().toLowerCase()
-  );
+    if (existingUser) {
+      alert("User already exists!");
+      return;
+    }
 
-  if (existingUser) {
-    alert('❌ Email or Username already exists!');
-    return;
+    const newUser = {
+      username: this.username,
+      email: this.email,
+      password: this.password
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    alert("Account created successfully!");
+    this.router.navigate(['/login']);
   }
 
-  // Create new user object
-  const newUser = {
-    username: this.username.trim(),
-    email: this.email.trim(),
-    password: this.password
-  };
-
-  // Add user to array
-  users.push(newUser);
-
-  // Save array back to localStorage
-  localStorage.setItem('users', JSON.stringify(users));
-
-  alert('✅ Signup successful! Please login.');
-
-  // Reset form fields
-  this.username = '';
-  this.email = '';
-  this.password = '';
-
-  // Navigate to login
-  this.router.navigate(['/login']);
-}
-
-goToLogin() {
-  this.router.navigate(['/login']);
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 }

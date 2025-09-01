@@ -1,0 +1,28 @@
+// src/app/app.scss
+.main-layout {
+  min-height: calc(100vh - 120px); // Adjust based on header/footer height
+  transition: margin-left 0.3s ease-in-out;
+  padding: 2rem;
+}
+
+.main-layout.sidebar-open {
+  margin-left: 280px; // Same as sidebar width
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-layout.sidebar-open {
+    margin-left: 0; // On mobile, sidebar overlays instead of pushing content
+  }
+}
+
+// Global styles for the app
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #f8fafc;
+}

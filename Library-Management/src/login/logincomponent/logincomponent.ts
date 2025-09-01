@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
+import { AuthService } from '../../app/services/auth.service/auth.service';
 
 @Component({
   selector: 'app-logincomponent',
@@ -10,37 +11,26 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './logincomponent.scss'
 })
 export class Logincomponent {
-usernameOrEmail: string = '';  
-password: string = '';          
+  usernameOrEmail: string = '';  
+  password: string = '';          
 
-constructor(private router: Router) {} 
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {} 
 
-login(){
+  login() {
+    // Use the AuthService login method
+    const loginSuccess = this.authService.login(this.usernameOrEmail, this.password);
+    
+    if (loginSuccess) {
+      // Navigation is handled by AuthService, but we can also navigate here
+      this.router.navigate(['/dashboard']);
+    }
+    // Error handling is done in AuthService with alerts
+  }
 
-const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-const enteredUser = (this.usernameOrEmail || '').trim();
-const enteredPass = (this.password || '').trim();
-
-
-const existingUser = users.find(
-  (user: any) =>
-    user.username === enteredUser || user.email === enteredUser
-);
-
-if (!existingUser) {
-  alert("User not found. Please sign up first.");
-} else if (existingUser.password !== enteredPass) {
-  alert("Incorrect password. Please try again.");
-} else {
-  alert(`Welcome back, ${existingUser.username}!`);
-  localStorage.setItem('loggedInUser', JSON.stringify(existingUser));
-  this.router.navigate(['/dashboard']);
-}
-}
-
-goToSignup() {
-  this.router.navigate(['/signup']);
-}
-
+  goToSignup() {
+    this.router.navigate(['/signup']);
+  }
 }

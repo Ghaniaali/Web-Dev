@@ -2,7 +2,7 @@
 .footer {
   background: #8b5cf6;
   color: #fff;
-  padding: 20px 0;
+  padding: 1rem 2rem;
   text-align: center;
   font-size: 1.05rem;
   letter-spacing: 0.5px;
@@ -10,8 +10,9 @@
 
   div {
     margin: 0 auto;
+    display: flex;
     font-weight: 500;
-    max-width: 600px;
+    width: 200px;
     opacity: 0.95;
   }
 }
