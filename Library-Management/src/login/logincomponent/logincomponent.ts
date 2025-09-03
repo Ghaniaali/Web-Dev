@@ -20,14 +20,12 @@ export class Logincomponent {
   ) {} 
 
   login() {
-    // Use the AuthService login method
+   
     const loginSuccess = this.authService.login(this.usernameOrEmail, this.password);
     
     if (loginSuccess) {
-      // Navigation is handled by AuthService, but we can also navigate here
       this.router.navigate(['/dashboard']);
     }
-    // Error handling is done in AuthService with alerts
   }
 
   goToSignup() {

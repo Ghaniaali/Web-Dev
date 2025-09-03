@@ -6,31 +6,37 @@ import { Signupcomponent } from '../signup/signupcomponent/signupcomponent';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { AuthGuard } from './guard/auth.guard/auth.guard';
 import { LoginGuard } from './guard/login.guard/login.guard';
+import { RolesComponent } from './pages/roles/roles';
 
 export const routes: Routes = [
   { 
     path: 'login', 
     component: Logincomponent, 
-    canActivate: [LoginGuard] // Prevents access when already logged in
+    canActivate: [LoginGuard] 
   },
   { 
     path: 'signup', 
     component: Signupcomponent, 
-    canActivate: [LoginGuard] // Prevents access when already logged in
+    canActivate: [LoginGuard] 
   },
   { 
     path: 'dashboard', 
     component: DashboardComponent, 
-    canActivate: [AuthGuard] // Requires authentication
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'roles', 
+    component: RolesComponent, 
+    canActivate: [AuthGuard] 
   },
   { 
     path: '', 
-    redirectTo: '/dashboard', // Changed from '/login' to '/dashboard'
+    redirectTo: '/dashboard', 
     pathMatch: 'full' 
   },
   {
     path: '**',
-    redirectTo: '/dashboard' // Redirect any unknown routes to dashboard
+    redirectTo: '/dashboard' 
   }
 ];
 

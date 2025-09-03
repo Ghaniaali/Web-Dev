@@ -35,9 +35,8 @@
       margin-bottom: 1rem;
     }
     
-    .sidebar-header h3 {
+    .sidebar-header h2 {
       margin: 0;
-      font-size: 1.2rem;
       font-weight: 600;
     }
     
@@ -83,7 +82,7 @@
       cursor: pointer;
       width: 100%;
       text-align: left;
-      font-size: 1rem;
+      font-size: 1.5rem;
       font-family: inherit;
     }
     
@@ -117,11 +116,6 @@
       visibility: hidden;
       transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
       z-index: 999;
-    }
-    
-    .sidebar-overlay.show {
-      opacity: 1;
-      visibility: visible;
     }
     
     @media (max-width: 768px) {

@@ -1,12 +1,12 @@
-// src/app/app.scss
+
 .main-layout {
-  min-height: calc(100vh - 120px); // Adjust based on header/footer height
+  min-height: calc(100vh - 120px);
   transition: margin-left 0.3s ease-in-out;
   padding: 2rem;
 }
 
 .main-layout.sidebar-open {
-  margin-left: 280px; // Same as sidebar width
+  margin-left: 280px
 }
 
 // Responsive design

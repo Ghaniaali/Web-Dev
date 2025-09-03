@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class Sidebar {
 
    @Input() isOpen: boolean = false;
-  @Output() sidebarClose = new EventEmitter<void>();
+   @Output() sidebarClose = new EventEmitter<void>();
 
   constructor(private router: Router) {}
 
@@ -29,7 +29,7 @@ export class Sidebar {
 
   navigateTo(route: string) {
     this.router.navigate([route]);
-    this.isOpen = false; // Close sidebar after navigation
-    this.sidebarClose.emit(); // Emit close event
+    this.isOpen = false; 
+    this.sidebarClose.emit();
   }
 }

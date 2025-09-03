@@ -2,9 +2,8 @@ import { Component,Output, EventEmitter} from '@angular/core';
 import { AuthService } from '../../services/auth.service/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter
+import { filter } from 'rxjs';
 
- } from 'rxjs';
 @Component({
   selector: 'app-header',
   imports: [CommonModule],
@@ -12,20 +11,26 @@ import { filter
   styleUrl: './header.scss'
 })
 export class Header{
-@Output() sidebarToggle = new EventEmitter<void>();
+ @Output() sidebarToggle = new EventEmitter<void>();
   isDashboardRoute: boolean = false;
 
   constructor(
     public authService: AuthService,
     private router: Router
   ) {
+    
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.isDashboardRoute = event.url === '/dashboard' || event.url.startsWith('/dashboard');
+      this.isDashboardRoute = this.shouldShowSidebarButton(event.url);
     });
     
-    this.isDashboardRoute = this.router.url === '/dashboard' || this.router.url.startsWith('/dashboard');
+    this.isDashboardRoute = this.shouldShowSidebarButton(this.router.url);
+  }
+
+  private shouldShowSidebarButton(url: string): boolean {
+    const pagesWithSidebar = ['/dashboard', '/roles', '/books', '/users', '/reports'];
+    return pagesWithSidebar.some(page => url === page || url.startsWith(page + '/'));
   }
 
   toggleSidebar(): void {

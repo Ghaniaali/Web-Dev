@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component} from '@angular/core';
 import { AuthService } from '../../services/auth.service/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard.scss'
 })
 export class DashboardComponent {
-
    
   constructor(private authService: AuthService) {}
   
