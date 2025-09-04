@@ -1,22 +1,34 @@
-.dashboard {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .dashboard-header {
-      margin-bottom: 2rem;
-    }
-    
-    .dashboard-header h1 {
-      color: #2c3e50;
-      margin-bottom: 0.5rem;
-    }
-    
-    .dashboard-header p {
-      color: #6c757d;
-      margin: 0;
-    }
-    
+.dashboard-page {
+  min-height: calc(100vh - 140px);
+  margin: 0 auto;
+  background-color: #f8fafc;
+  padding: 0;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  padding: 2rem;
+  margin: -2rem -2rem 2rem -2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.header-content p {
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

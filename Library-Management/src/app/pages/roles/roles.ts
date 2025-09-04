@@ -12,6 +12,7 @@ import { RolesService, Role, Permission } from '../../services/roles.service/rol
 })
 
 export class RolesComponent implements OnInit {
+  
   roles: Role[] = [];
   showAddRoleForm = false;
   showEditModal = false;

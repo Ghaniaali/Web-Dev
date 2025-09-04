@@ -22,7 +22,6 @@ export class App implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Check authentication status on app initialization
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
     }

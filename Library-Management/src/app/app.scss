@@ -26,3 +26,13 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   background-color: #f8fafc;
 }
+
+:root{
+  --sb-collapsed: 64px;      
+  --sb-expanded: 240px;      
+  --sb-bg: #111827;          
+  --sb-fg: #e5e7eb;          
+  --sb-hover: #1f2937;       
+  --accent: #4f46e5;         
+}
+

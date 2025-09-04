@@ -4,7 +4,6 @@
   padding: 0;
 }
 
-// Page Header
 .page-header {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: white;
@@ -47,7 +46,6 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-// Buttons
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -103,7 +101,7 @@
   font-size: 1rem;
 }
 
-// Add Role Form
+
 .add-role-section {
   margin-bottom: 2rem;
   animation: slideDown 0.3s ease-out;
@@ -214,7 +212,6 @@
   margin-top: 0.25rem;
 }
 
-// Permissions
 .permissions-container {
   background: #f9fafb;
   border-radius: 12px;
@@ -306,7 +303,6 @@
   line-height: 1.4;
 }
 
-// Form Actions
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -316,7 +312,6 @@
   border-top: 2px solid #f3f4f6;
 }
 
-// Roles List Section
 .roles-section {
   margin-top: 2rem;
 }
@@ -344,7 +339,6 @@
   font-weight: 500;
 }
 
-// Roles Grid
 .roles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
@@ -535,7 +529,6 @@
   padding: 0.5rem 1rem;
 }
 
-// Modal Styles
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -622,7 +615,6 @@
   border-top: 2px solid #f3f4f6;
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;

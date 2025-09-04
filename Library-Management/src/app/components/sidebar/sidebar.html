@@ -1,47 +1,33 @@
-<div class="sidebar" [class.sidebar-open]="isOpen" [class.sidebar-closed]="!isOpen">
-      <div class="sidebar-content">
-        <div class="sidebar-header">
-          <h2>Menu</h2>
-          <button type="button" class="close-btn" (click)="closeSidebar()" aria-label="Close Menu">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        
-        <nav class="sidebar-nav">
-          <ul class="nav-list">
-            <li class="nav-item">
-              <button class="nav-link" (click)="navigateTo('/dashboard')">
-                <span class="nav-icon">📊</span>
-                Dashboard
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link" (click)="navigateTo('/books')">
-                <span class="nav-icon">📚</span>
-                Books
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link" (click)="navigateTo('/users')">
-                <span class="nav-icon">👥</span>
-                Users
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link" (click)="navigateTo('/roles')">
-                <span class="nav-icon">🔑</span>
-                Roles
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link" (click)="navigateTo('/reports')">
-                <span class="nav-icon">📈</span>
-                Reports
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
 
-      <div class="sidebar-overlay" [class.show]="isOpen" (click)="closeSidebar()"></div>
-    </div>
+    <aside class="sidebar" [class.sidebar-open]="isOpen" [class.sidebar-closed]="!isOpen">
+  <div class="sidebar-header">
+    <h2>Menu</h2>
+  </div>
+
+  <a class="item" (click)="navigateTo('/dashboard')" aria-label="Dashboard">
+    <span class="icon">📊</span>
+    <span class="label">Dashboard</span>
+  </a>
+
+  <a class="item" (click)="navigateTo('/books')" aria-label="Books">
+    <span class="icon">📚</span>
+    <span class="label">Books</span>
+  </a>
+
+  <a class="item" (click)="navigateTo('/users')" aria-label="Users">
+    <span class="icon">👥</span>
+    <span class="label">Users</span>
+  </a>
+
+  <a class="item" (click)="navigateTo('/roles')" aria-label="Roles">
+    <span class="icon">🔑</span>
+    <span class="label">Roles</span>
+  </a>
+
+  <a class="item" (click)="navigateTo('/reports')" aria-label="Reports">
+    <span class="icon">📈</span>
+    <span class="label">Reports</span>
+  </a>
+
+  <div class="sidebar-overlay" [class.show]="isOpen" (click)="closeSidebar()"></div>
+</aside>
