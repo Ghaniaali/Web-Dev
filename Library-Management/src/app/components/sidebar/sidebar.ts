@@ -8,27 +8,9 @@ import { Router,RouterModule  } from '@angular/router';
   styleUrl: './sidebar.scss'
 })
 export class Sidebar {
-
-     @Input() isOpen: boolean = false;
-     @Output() sidebarClose = new EventEmitter<void>();
-
     constructor(private router: Router) {}
-
-    toggleSidebar() {
-      this.isOpen = !this.isOpen;
-      if (!this.isOpen) {
-        this.sidebarClose.emit();
-      }
-    }
-
-    closeSidebar() {
-      this.isOpen = false;
-      this.sidebarClose.emit();
-    }
-
+    
     navigateTo(route: string) {
       this.router.navigate([route]);
-      this.isOpen = false; 
-      this.sidebarClose.emit();
     }
   }

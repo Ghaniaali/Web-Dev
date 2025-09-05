@@ -1,10 +1,12 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Header } from './components/header/header';
 import { Footer } from "./components/footer/footer";
 import { AuthService } from './services/auth.service/auth.service';
 import { CommonModule } from '@angular/common';
 import { Sidebar } from './components/sidebar/sidebar';
+import { filter } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -14,12 +16,18 @@ import { Sidebar } from './components/sidebar/sidebar';
 })
 export class App implements OnInit {
   protected readonly title = signal('Library-Management');
-  isSidebarOpen = false;
+  Showsidebar: boolean = false;
+  sidebaropen: boolean = false;
 
   constructor(
     public authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router){
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe((event: NavigationEnd) => {
+        this.Showsidebar = !event.url.includes('/login') && !event.url.includes('/signup');
+      });
+  }
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
@@ -27,11 +35,7 @@ export class App implements OnInit {
     }
   }
 
-  onSidebarToggle(): void {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
+  
 
-  onSidebarClose(): void {
-    this.isSidebarOpen = false;
-  }
+
 }

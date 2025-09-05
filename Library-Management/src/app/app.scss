@@ -5,18 +5,12 @@
   padding: 2rem;
 }
 
-.main-layout.sidebar-open {
-  margin-left: 280px
-}
-
-// Responsive design
 @media (max-width: 768px) {
   .main-layout.sidebar-open {
-    margin-left: 0; // On mobile, sidebar overlays instead of pushing content
+    margin-left: 0;
   }
 }
 
-// Global styles for the app
 * {
   box-sizing: border-box;
 }
@@ -27,12 +21,4 @@ body {
   background-color: #f8fafc;
 }
 
-:root{
-  --sb-collapsed: 64px;      
-  --sb-expanded: 240px;      
-  --sb-bg: #111827;          
-  --sb-fg: #e5e7eb;          
-  --sb-hover: #1f2937;       
-  --accent: #4f46e5;         
-}
 

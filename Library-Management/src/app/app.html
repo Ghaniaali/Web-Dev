@@ -1,7 +1,7 @@
-<app-header (sidebarToggle)="onSidebarToggle()"></app-header>
-<app-sidebar [isOpen]="isSidebarOpen" (sidebarClose)="onSidebarClose()"></app-sidebar>
+<app-header></app-header>
+  <app-sidebar *ngIf="Showsidebar"></app-sidebar>
 
-<div class="main-layout" [class.sidebar-open]="isSidebarOpen">
+<div class="main-layout">
   <router-outlet></router-outlet>
 </div>
 
