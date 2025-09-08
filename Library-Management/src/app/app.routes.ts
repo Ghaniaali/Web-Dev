@@ -7,6 +7,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { AuthGuard } from './guard/auth.guard/auth.guard';
 import { LoginGuard } from './guard/login.guard/login.guard';
 import { RolesComponent } from './pages/roles/roles';
+import { Books } from './pages/books/books';
+import { Users } from './pages/users/users';
+import { Reports } from './pages/reports/reports';
 
 export const routes: Routes = [
   { 
@@ -28,6 +31,21 @@ export const routes: Routes = [
     path: 'roles', 
     component: RolesComponent, 
     canActivate: [AuthGuard] 
+  },
+  {
+   path: 'books',
+   component: Books,
+   canActivate: [AuthGuard]
+  },
+  {
+   path: 'users',
+   component: Users,
+   canActivate: [AuthGuard]
+  },
+  {
+   path: 'reports',
+   component: Reports,
+   canActivate: [AuthGuard]
   },
   { 
     path: '', 

@@ -3,15 +3,34 @@
   min-height: calc(100vh - 120px);
   transition: margin-left 0.3s ease-in-out;
   padding: 2rem;
+  margin-left: 64px;
+}
+
+.main-layout.sidebar-expanded {
+  margin-left: 250px;
+}
+
+.main-content {
+  margin-left: 64px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-expanded {
+  margin-left: 240px;
 }
 
 @media (max-width: 768px) {
-  .main-layout.sidebar-open {
-    margin-left: 0;
+  .main-layout {
+    margin-left: 240px;
   }
 }
 
+.main-layout.sidebar-open {
+  margin-left: 0;
+}
+
 * {
+
   box-sizing: border-box;
 }
 

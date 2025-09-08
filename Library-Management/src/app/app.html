@@ -1,8 +1,13 @@
 <app-header></app-header>
-  <app-sidebar *ngIf="Showsidebar"></app-sidebar>
 
 <div class="main-layout">
+  <app-sidebar *ngIf="Showsidebar"
+  (sidebarhover)="onSidebarHover($event)">
+  </app-sidebar>
+
+<div class="main-content" [class.shifted-expanded]="sidebarExpanded">
   <router-outlet></router-outlet>
-</div>
+ </div>
+ </div>
 
 <app-footer></app-footer>

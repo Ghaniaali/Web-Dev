@@ -1,6 +1,6 @@
 
-  <aside class="sidebar">
-  <div class="sidebar-header">
+  <aside class="sidebar" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+   <div class="sidebar-header" *ngIf="authService.isLoggedIn$ | async">
     <h2>Menu</h2>
   </div>
 
@@ -29,5 +29,11 @@
     <span class="label">Reports</span>
   </a>
 
-  <div class="sidebar-overlay"></div>
+  <div class="sidebar-separator">
+   <hr class="dashed"/>
+   <a class="item" (click)="logout()" aria-label="Logout">
+    <span class="icon">➜</span>
+    <span class="label">Logout</span>
+  </a>
+  </div>
 </aside>

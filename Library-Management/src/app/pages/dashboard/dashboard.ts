@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { AuthService } from '../../services/auth.service/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -9,11 +9,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard.scss'
 })
 export class DashboardComponent {
-   
-  constructor(private authService: AuthService) {}
   
-  ngOnInit(): void {
+  @Input() isSideBarOpen: boolean= false;
     
-  }
+  constructor(private authService: AuthService) {}
 
 }

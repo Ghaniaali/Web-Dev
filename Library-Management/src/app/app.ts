@@ -14,10 +14,11 @@ import { filter } from 'rxjs';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
+
 export class App implements OnInit {
   protected readonly title = signal('Library-Management');
   Showsidebar: boolean = false;
-  sidebaropen: boolean = false;
+  sidebarExpanded: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -35,7 +36,7 @@ export class App implements OnInit {
     }
   }
 
-  
-
-
+  onSidebarHover(expanded: boolean) {
+    this.sidebarExpanded = expanded;
+  }
 }
