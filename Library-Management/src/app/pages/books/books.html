@@ -1,1 +1,225 @@
-<p>books works!</p>
+<div class="Books-page">
+ <div class="page-header">
+    <div class="header-content">
+      <h1>Books Management</h1>
+      <p>Manage your library books, track issues and returns</p>
+    </div>
+  </div>
+
+  <div class = "books-container">
+    <div class="form-section">
+    <h2 class="section-title"> {{ editIndex === null ? 'Add New Book' : 'Edit Book' }}</h2>
+
+    <form (ngSubmit)="editIndex === null ? addBook() : updateBook()" class="book-form">
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="title"> Book Title</label>
+                <input type="text" id="title" name="title" required [(ngModel)]="title" placeholder="Enter book title" class="form-input"/>
+            </div>
+
+            <div class="form-group">
+                <label for="author"> Author</label>
+                <input type="text" id="author" name="author" required [(ngModel)]="author" placeholder="Enter author name" class="form-input"/>
+            </div>
+
+            <div class="form-group">
+                <label for="isbn">ISBN</label>
+                <input type="text" id="isbn" name="isbn" required [(ngModel)]="isbn" placeholder="Enter ISBN" class="form-input"/>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required [(ngModel)]="category" class="form-select">
+                    <option *ngFor="let categoryOption of categories" [value]="categoryOption">
+                        {{ categoryOption }}
+               </option>
+             </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="btn-icon">{{ editIndex === null ? '➕' : '✏️' }}</i>
+                {{ editIndex === null ? 'Add Book' : 'Update Book' }}
+                </button>
+
+            <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="resetForm()" 
+            *ngIf="editIndex !== null">
+
+            <i class="btn-icon">❌</i>
+            Cancel
+          </button>
+        </div>
+    </form>
+ </div>
+
+ <div class="list-section">
+    <div class="section-header">
+        <h2 class="section-title">Book Library</h2>
+        <div class="header-controls">
+
+            <div class="filter-container">
+                <select [(ngModel)]="filterStatus" class="filter-select">
+                    <option value="all">All Books</option>
+                    <option value="available">Available</option>
+                    <option value="issued">Issued</option>
+                </select>
+            </div>
+
+            <div class="search-container">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Search books..." class="search-input"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="books-table">
+            <thead>
+                <tr>
+                    <th>Book Details</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Issue Details</th>
+                    <th>Actions</th>
+                </tr>           
+             </thead>
+             <tbody>
+                <tr *ngFor="let book of filteredBooks; let i = index" 
+                    [class.overdue]="isOverdue(book)">
+                    <td class="book-info">
+                        <div class="book-details">
+                            <div class="book-cover">
+                                {{ book.title.charAt(0).toUpperCase()}}
+                            </div>
+                            <div class="book-text">
+                                <div class="book-title">{{ book.title }}</div>
+                                <div class="book-author">{{ book.author }}</div>
+                                <div class="book-isbn">{{ book.isbn }}</div>
+                            </div>
+                           </div>
+                         </td>
+
+                         <td>
+                            <span class="category-badge"> {{ book.category }}</span>
+                         </td>
+
+                         <td>
+                            <span class="status-badge" [class.available]= "book.available" [class.issued]="!book.available">
+                             {{ book.available ? 'Available' : 'Issued' }}
+                            </span>
+                            <div ngif="isOverdue(book)" class="overdue-indicator"> ⚠️ Overdue</div>
+                         </td>
+
+                         <td class="issue-details">
+                            <div *ngIf="!book.available">
+                                <div class="issued-to">👤 {{ book.issuedTo }}</div>
+                                <div class="issue-date">📅 {{ book.issueDate }}</div>
+                                <div class="due-date" [class.overdue]="isOverdue(book)">
+                                ⏰ Due: {{ book.dueDate }}
+                          </div>
+                        </div>
+                           <span *ngIf="book.available" class="no-issue">-</span>
+                        </td>
+
+                        <td class="actions">
+                            <button class = "btn-action btn-edit" (click)="editBook(i)" title="Edit book">
+                                ✏️
+                            </button>
+                            <button class = "btn-action btn-delete" (click)="deleteBook(i)" title="Delete book">
+                                🗑️
+                            </button>
+
+                            <button *ngIf="book.available" class = "btn-action btn-issue" (click)="openIssueModal(i)" title="Issue Book">
+                                📤
+                            </button>   
+
+                            <button *ngIf="!book.available" class = "btn-action btn-return" (click)="returnBook(i)" title="Return Book">
+                                📤
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="filteredBooks.length === 0" class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h3>No books found</h3>
+            <p *ngIf="searchTerm || filterStatus !== 'all' ">Try adjusting your search criteria</p>
+            <p *ngIf="!searchTerm && filterStatus === 'all' ">Start by adding your first book to the library</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showIssueModal" class="modal-overlay" (click)="closeIssueModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Issue Book</h3>
+        <button class="modal-close" (click)="closeIssueModal()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div *ngIf="selectedBookIndex !== null" class="book-summary">
+          <div class="book-cover-large">
+            {{ books[selectedBookIndex].title.charAt(0).toUpperCase() }}
+          </div>
+          <div class="book-details">
+            <h4>{{ books[selectedBookIndex].title }}</h4>
+            <p>by {{ books[selectedBookIndex].author }}</p>
+          </div>
+        </div>
+        
+        <div class="issue-form">
+          <div class="form-group">
+            <label for="issueUser">Select User:</label>
+            <select 
+              id="issueUser"
+              [(ngModel)]="issuedTo" 
+              name="issuedTo" 
+              class="form-select"
+              required
+            >
+              <option value="">Choose a user...</option>
+              <option *ngFor="let user of users" [value]="user.username">
+                {{ user.username }} ({{ user.role || 'Member' }})
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="issueDueDate">Due Date:</label>
+            <input 
+              type="date" 
+              id="issueDueDate"
+              [(ngModel)]="dueDate" 
+              name="dueDate" 
+              class="form-input"
+              required
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeIssueModal()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" (click)="issueBook()">
+          <i class="btn-icon">📤</i>
+          Issue Book
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+

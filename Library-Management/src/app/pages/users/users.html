@@ -1,1 +1,128 @@
-<p>users works!</p>
+<div class="User-page">
+ <div class="page-header">
+    <div class="header-content">
+      <h1>Users Management</h1>
+      <p>Manage library members, librarians, and administrators</p>
+    </div>
+  </div>
+
+  <div class="users-container">
+    <div class= "form-section">
+        <h2 class="section-title">{{ editIndex === null ? 'Add New User' : 'Edit User' }}</h2>
+        <form (ngSubmit)="editIndex === null ? addUser() : updateUser()" class="user-form">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required [(ngModel)]="username" placeholder="Enter username" class="form-input"/>
+               </div>
+
+               <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required [(ngModel)]="email" placeholder="Enter email" class="form-input"/>
+               </div>
+
+               <div class="form-group">
+                    <label for="password">Password</label>
+                     <input type= "password" id="password" name="password" required [(ngModel)]="password" placeholder="Enter password" class="form-input"/>
+             </div>
+
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" required [(ngModel)]="role" class="form-select">
+                <option *ngFor="let roleOption of roles" [value]="roleOption">
+                {{ roleOption }}
+              </option>
+            </select>
+         </div>
+         </div>
+
+         <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="btn-icon">{{ editIndex === null ? '➕' : '✏️' }}</i>
+                 {{ editIndex === null ? 'Add User' : 'Update User' }}
+            </button>
+
+            <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="resetForm()" 
+            *ngIf="editIndex !== null">
+
+            <i class="btn-icon">❌</i>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="list-section">
+        <div class="section-header">
+            <h2 class="section-title">User List</h2>
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search users..." class="search-input"/>
+    </div>
+
+    <div class="table-container desktop-only">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>User Info</th>
+              <th>Role</th>
+              <th>Join Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers; let i = index" 
+                [class.inactive]="user.status === 'Inactive'">
+              <td class="user-info">
+                <div class="user-details">
+                  <div class="user-avatar">
+                    {{ user.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="user-text">
+                    <div class="username">{{ user.username }}</div>
+                    <div class="email">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="role-badge" [class]="'role-' + user.role.toLowerCase()">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>{{ user.joinDate || 'N/A' }}</td>
+              <td>
+                <button 
+                  class="status-toggle"
+                  [class.active]="user.status === 'Active'"
+                  (click)="toggleUserStatus(i)"
+                >
+                  {{ user.status || 'Active' }}
+                </button>
+              </td>
+              <td class="actions">
+                <button class="btn-action btn-edit" (click)="editUser(i)" title="Edit user">
+                  ✏️
+                </button>
+                <button class="btn-action btn-delete" (click)="deleteUser(i)" title="Delete user">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="filteredUsers.length === 0" class="empty-state">
+        <div class="empty-icon">👥</div>
+        <h3>No users found</h3>
+        <p *ngIf="searchTerm">Try adjusting your search criteria</p>
+        <p *ngIf="!searchTerm">Start by adding your first user</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+

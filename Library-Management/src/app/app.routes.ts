@@ -8,7 +8,7 @@ import { AuthGuard } from './guard/auth.guard/auth.guard';
 import { LoginGuard } from './guard/login.guard/login.guard';
 import { RolesComponent } from './pages/roles/roles';
 import { Books } from './pages/books/books';
-import { Users } from './pages/users/users';
+import { UsersComponent } from './pages/users/users';
 import { Reports } from './pages/reports/reports';
 
 export const routes: Routes = [
@@ -39,7 +39,7 @@ export const routes: Routes = [
   },
   {
    path: 'users',
-   component: Users,
+   component: UsersComponent,
    canActivate: [AuthGuard]
   },
   {

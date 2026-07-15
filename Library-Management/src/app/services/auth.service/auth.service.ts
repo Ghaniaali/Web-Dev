@@ -2,6 +2,16 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  role: string;
+  status: string;
+  joinDate: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,28 +24,30 @@ export class AuthService {
   }
 
   private hasLoggedInUser(): boolean {
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    return loggedInUser !== null;
+    return localStorage.getItem('loggedInUser') !== null;
   }
 
   login(usernameOrEmail: string, password: string): boolean {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
     
-    const enteredUser = (usernameOrEmail || '').trim();
+    const enteredUser = (usernameOrEmail || '').trim().toLowerCase();
     const enteredPass = (password || '').trim();
 
     const existingUser = users.find(
-      (user: any) =>
-        user.username === enteredUser || user.email === enteredUser
+      (user: User) =>
+        user.username.toLowerCase() === enteredUser || 
+        user.email.toLowerCase() === enteredUser
     );
 
     if (!existingUser) {
       alert("User not found. Please sign up first.");
       return false;
-    } else if (existingUser.password !== enteredPass) {
+    } 
+     else if (existingUser.password !== enteredPass) {
       alert("Incorrect password. Please try again.");
       return false;
-    } else {
+    } 
+     else {
       alert(`Welcome back, ${existingUser.username}!`);
       localStorage.setItem('loggedInUser', JSON.stringify(existingUser));
       this.isLoggedInSubject.next(true);
