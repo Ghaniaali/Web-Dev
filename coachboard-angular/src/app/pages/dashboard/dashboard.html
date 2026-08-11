@@ -1,0 +1,187 @@
+<div class="dashboard">
+
+  <!-- =========================
+       PAGE HEADER
+       ========================= -->
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">
+      Welcome back. Here's your client overview.
+    </p>
+  </div>
+
+
+  <!-- =========================
+       STAT CARDS
+       ========================= -->
+  <div class="stats-row">
+
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+
+        <span class="stat-label">
+          {{ stat.label }}
+        </span>
+
+        <div class="stat-main">
+          <span class="stat-value">
+            {{ stat.value }}
+          </span>
+
+          <span
+            class="stat-sub"
+            [style.color]="stat.subColor">
+            {{ stat.sub }}
+          </span>
+        </div>
+
+      </div>
+    }
+
+  </div>
+
+
+  <!-- =========================
+       BOTTOM SECTION
+       CLIENT TABLE + AI MEAL PLAN
+       ========================= -->
+  <div class="dashboard-bottom">
+
+
+    <!-- =========================
+         CLIENT OVERVIEW CARD
+         ========================= -->
+    <div class="card client-card">
+
+      <h2 class="card-title">
+        Client Overview
+      </h2>
+
+      <table class="client-table">
+
+        <thead>
+          <tr>
+            <th>Client Name</th>
+            <th>Goal</th>
+            <th>Last Check-in</th>
+            <th>Adherence</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (client of clients; track client.name) {
+
+            <tr>
+
+              <!-- Client Name -->
+              <td>
+                {{ client.name }}
+              </td>
+
+              <!-- Goal -->
+              <td>
+                {{ client.goal }}
+              </td>
+
+              <!-- Last Check-in -->
+              <td>
+                {{ client.lastCheckin }}
+              </td>
+
+              <!-- Adherence -->
+              <td>
+                {{ client.adherence }}%
+              </td>
+
+              <!-- Status -->
+              <td>
+
+                <span
+                  class="status-badge"
+                  [style.color]="client.statusColor">
+
+                  <span
+                    class="status-dot"
+                    [style.background-color]="client.statusColor">
+                  </span>
+
+                  {{ client.status }}
+
+                </span>
+
+              </td>
+
+              <!-- Action -->
+              <td>
+                <button class="view-btn">
+                  View
+                </button>
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+
+    <!-- =========================
+         AI MEAL PLAN CARD
+         ========================= -->
+    <div class="meal-card">
+
+      <h2 class="card-title">
+        AI Meal Plan — Sarah M.
+      </h2>
+
+      <p class="meal-subtitle">
+        Goal: Weight Loss · 1,800 cal target
+      </p>
+
+
+      <!-- Meals -->
+
+      @for (meal of meals; track meal.name) {
+
+        <div class="meal-item">
+
+          <div class="meal-time">
+            {{ meal.time }}
+          </div>
+
+          <div class="meal-name">
+            {{ meal.name }}
+          </div>
+
+          <div class="meal-macros">
+            {{ meal.macros }}
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- Regenerate Button -->
+
+      <button
+        class="regenerate-btn"
+        (click)="regenerateMeal()">
+
+        Regenerate with AI ✨
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
