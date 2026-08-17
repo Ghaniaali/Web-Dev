@@ -1,0 +1,229 @@
+@if (client(); as c) {
+<div class="detail-page">
+
+  <!-- Back Button -->
+  <button class="back-btn" (click)="goBack()">
+    ← Back to Clients
+  </button>
+
+  <!-- Hero Card -->
+  <div class="hero-card card">
+    <div class="hero-left">
+      <div class="hero-avatar">{{ c.avatar }}</div>
+      <div class="hero-info">
+        <h1 class="hero-name">{{ c.name }}</h1>
+        <p class="hero-meta">{{ c.goal }} · {{ c.calories }} cal/day</p>
+        <p class="hero-meta">{{ c.email }} · {{ c.phone }}</p>
+        <div class="hero-tags">
+          @for (r of c.restrictions; track r) {
+            <span class="tag">{{ r }}</span>
+          }
+          @if (c.restrictions.length === 0) {
+            <span class="tag muted">No restrictions</span>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <span
+        class="status-badge-large"
+        [ngStyle]="{ color: c.statusColor, borderColor: c.statusColor }"
+      >
+        {{ c.status }}
+      </span>
+      <button class="generate-btn" (click)="generateMeal()">
+        ✨ Generate Meal Plan
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat Strip -->
+  <div class="stat-strip">
+    <div class="strip-item">
+      <span class="strip-val" style="color: var(--accent-green)">{{ c.adherence }}%</span>
+      <span class="strip-lbl">Adherence</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <span class="strip-val" style="color: var(--accent-purple)">{{ c.weight }}{{ c.weightUnit }}</span>
+      <span class="strip-lbl">Current Weight</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <span class="strip-val" style="color: var(--warning)">{{ c.sessions }}</span>
+      <span class="strip-lbl">Sessions Done</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <span class="strip-val" style="color: #FF6B35">🔥 {{ c.streak }}</span>
+      <span class="strip-lbl">Day Streak</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <span class="strip-val">{{ c.lastCheckin }}</span>
+      <span class="strip-lbl">Last Check-in</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button
+      class="tab"
+      [class.active]="activeTab() === 'overview'"
+      (click)="setTab('overview')"
+    >Overview</button>
+    <button
+      class="tab"
+      [class.active]="activeTab() === 'meals'"
+      (click)="setTab('meals')"
+    >AI Meal Plan</button>
+    <button
+      class="tab"
+      [class.active]="activeTab() === 'notes'"
+      (click)="setTab('notes')"
+    >Notes</button>
+  </div>
+
+  <!-- TAB: Overview -->
+  @if (activeTab() === 'overview') {
+    <div class="tab-content">
+      <div class="overview-grid">
+
+        <!-- Adherence Chart -->
+        <div class="card">
+          <div class="card-header-row">
+            <h3 class="card-title">8-Week Adherence</h3>
+            <span class="trend-chip">{{ weightChange }}{{ c.weightUnit }}</span>
+          </div>
+          <div class="mini-chart-wrapper">
+            <canvas #miniChart></canvas>
+          </div>
+        </div>
+
+        <!-- Weekly Sessions -->
+        <div class="card">
+          <h3 class="card-title">Weekly Sessions</h3>
+          <div class="sessions-bars">
+            @for (s of c.weeklySessions; track $index; let i = $index) {
+              <div class="bar-col">
+                <div
+                  class="bar-fill"
+                  [ngStyle]="{
+                    height: (s / 7 * 100) + '%',
+                    background: s >= 5 ? '#00E096' : s >= 3 ? '#FFD32A' : '#FF4757'
+                  }"
+                ></div>
+                <span class="bar-label">W{{ i + 1 }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- TAB: Meals -->
+  @if (activeTab() === 'meals') {
+    <div class="tab-content">
+
+      @if (isLoading()) {
+        <div class="loading-card card">
+          <div class="spinner-large"></div>
+          <p>Generating AI meal plan for {{ c.name }}...</p>
+        </div>
+      }
+
+      @if (aiError()) {
+        <div class="error-card">⚠️ {{ aiError() }}</div>
+      }
+
+      @if (!isLoading() && !mealPlan() && !aiError()) {
+        <div class="empty-state card">
+          <div class="empty-icon">🤖</div>
+          <h3>No meal plan yet</h3>
+          <p>Click "Generate Meal Plan" above to create one for {{ c.name }}.</p>
+        </div>
+      }
+
+      @if (mealPlan(); as plan) {
+        <div class="meal-summary-bar">
+          <div class="ms-item">
+            <span class="ms-val">{{ plan.totalCalories }}</span>
+            <span class="ms-lbl">Total Calories</span>
+          </div>
+          <div class="ms-item">
+            <span class="ms-val">{{ plan.totalProtein }}g</span>
+            <span class="ms-lbl">Total Protein</span>
+          </div>
+          <div class="ms-item">
+            <span class="ms-val">{{ c.calories - plan.totalCalories }}</span>
+            <span class="ms-lbl">Remaining</span>
+          </div>
+        </div>
+
+        <div class="meals-grid">
+          @for (meal of mainMeals; track meal.key) {
+            <div class="meal-card card">
+              <div class="meal-header">
+                <span class="meal-icon">{{ meal.icon }}</span>
+                <span class="meal-label">{{ meal.label }}</span>
+                <span class="cal-chip">{{ meal.data.calories }} cal</span>
+              </div>
+              <h4 class="meal-name">{{ meal.data.name }}</h4>
+              <div class="macros-row">
+                <div class="macro-chip">
+                  <span class="mv">{{ meal.data.protein }}g</span>
+                  <span class="ml">Protein</span>
+                </div>
+                <div class="macro-chip">
+                  <span class="mv">{{ meal.data.carbs }}g</span>
+                  <span class="ml">Carbs</span>
+                </div>
+                <div class="macro-chip">
+                  <span class="mv">{{ meal.data.fats }}g</span>
+                  <span class="ml">Fats</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (plan.snacks.length > 0) {
+          <div class="card" style="margin-top: 16px">
+            <h3 class="card-title">🥜 Snacks</h3>
+            <div class="snacks-row">
+              @for (snack of plan.snacks; track snack.name) {
+                <div class="snack-chip">
+                  <span class="snack-name">{{ snack.name }}</span>
+                  <span class="snack-cal">{{ snack.calories }} cal</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div style="margin-top: 16px; text-align: right">
+          <button class="generate-btn" (click)="generateMeal()">
+            ✨ Regenerate Plan
+          </button>
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- TAB: Notes -->
+  @if (activeTab() === 'notes') {
+    <div class="tab-content">
+      <div class="card">
+        <h3 class="card-title">Coach Notes</h3>
+        <div class="notes-box">
+          {{ c.notes || 'No notes added yet.' }}
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
+}

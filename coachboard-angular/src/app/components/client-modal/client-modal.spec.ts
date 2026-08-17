@@ -1,19 +1,17 @@
-/// <reference types="jasmine" />
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Progress } from './progress';
+import { ClientModal } from './client-modal';
 
-describe('Progress', () => {
-  let component: Progress;
-  let fixture: ComponentFixture<Progress>;
+describe('ClientModal', () => {
+  let component: ClientModal;
+  let fixture: ComponentFixture<ClientModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Progress]
+      imports: [ClientModal]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Progress);
+    fixture = TestBed.createComponent(ClientModal);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

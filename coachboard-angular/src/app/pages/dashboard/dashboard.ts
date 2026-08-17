@@ -1,146 +1,73 @@
-import { Component } from '@angular/core';
-
-interface Stat {
-  label: string;
-  value: string;
-  sub: string;
-  subColor: string;
-}
-
-interface Client {
-  name: string;
-  goal: string;
-  lastCheckin: string;
-  adherence: number;
-  status: string;
-  statusColor: string;
-}
-
-interface Meal {
-  time: string;
-  name: string;
-  macros: string;
-}
+import { Component, signal, inject } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { Router } from '@angular/router';
+import { ClientService } from '../../services/client';
+import { OpenAiService, MealPlan } from '../../services/open-ai';
 
 @Component({
-  selector: 'app-dashboard',
+  selector:    'app-dashboard',
+  standalone:  true,
+  imports:     [NgStyle],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl:    './dashboard.css'
 })
 export class Dashboard {
 
-  // =========================
-  // STAT CARDS
-  // =========================
+  private router        = inject(Router);
+  private clientService = inject(ClientService);
+  private openAiService = inject(OpenAiService);
 
-  stats: Stat[] = [
-    {
-      label: 'ACTIVE CLIENTS',
-      value: '24',
-      sub: '↑ 3 this week',
-      subColor: '#00E096'
-    },
-    {
-      label: 'AVG ADHERENCE',
-      value: '78%',
-      sub: '↑ 5% vs last week',
-      subColor: '#00E096'
-    },
-    {
-      label: 'CHECK-INS TODAY',
-      value: '9',
-      sub: '3 pending review',
-      subColor: '#FFD32A'
-    },
-    {
-      label: 'AT RISK CLIENTS',
-      value: '2',
-      sub: 'Missed 3+ days',
-      subColor: '#FF4757'
-    }
+  clients = this.clientService.clients;
+
+  stats = [
+    { label: 'ACTIVE CLIENTS',  value: '—', sub: '—',                  subColor: '#00E096' },
+    { label: 'AVG ADHERENCE',   value: '—', sub: '—',                  subColor: '#00E096' },
+    { label: 'CHECK-INS TODAY', value: '9', sub: '3 pending review',   subColor: '#FFD32A' },
+    { label: 'AT RISK CLIENTS', value: '—', sub: 'Missed 3+ days',     subColor: '#FF4757' },
   ];
 
+  // Dynamic stats from service
+  get totalClients()    { return this.clients().length; }
+  get avgAdherence()    { return Math.round(this.clients().reduce((a, c) => a + c.adherence, 0) / this.clients().length); }
+  get atRiskCount()     { return this.clients().filter(c => c.status !== 'On Track').length; }
+  get recentClients()   { return this.clients().slice(0, 5); }
 
-  // =========================
-  // CLIENT TABLE
-  // =========================
+  // Meal generator state
+  selectedClientId = signal<number>(1);
+  mealPlan         = signal<MealPlan | null>(null);
+  isGenerating     = signal(false);
+  mealError        = signal<string | null>(null);
 
-  clients: Client[] = [
-    {
-      name: 'Sarah M.',
-      goal: 'Weight Loss',
-      lastCheckin: 'Today, 9am',
-      adherence: 92,
-      status: 'On Track',
-      statusColor: '#00E096'
-    },
-    {
-      name: 'James K.',
-      goal: 'Muscle Gain',
-      lastCheckin: 'Yesterday',
-      adherence: 67,
-      status: 'At Risk',
-      statusColor: '#FFD32A'
-    },
-    {
-      name: 'Priya S.',
-      goal: 'Endurance',
-      lastCheckin: 'Today, 7am',
-      adherence: 88,
-      status: 'On Track',
-      statusColor: '#00E096'
-    },
-    {
-      name: 'Tom R.',
-      goal: 'Weight Loss',
-      lastCheckin: '3 days ago',
-      adherence: 41,
-      status: 'Off Track',
-      statusColor: '#FF4757'
-    },
-    {
-      name: 'Emma L.',
-      goal: 'Toning',
-      lastCheckin: 'Today, 11am',
-      adherence: 95,
-      status: 'On Track',
-      statusColor: '#00E096'
-    }
-  ];
-
-
-  // =========================
-  // AI MEAL PLAN
-  // =========================
-
-  meals: Meal[] = [
-    {
-      time: '🌅 Breakfast',
-      name: 'Oats + banana + almond butter',
-      macros: '487 cal · 32g protein'
-    },
-    {
-      time: '☀️ Lunch',
-      name: 'Grilled chicken + brown rice + broccoli',
-      macros: '612 cal · 48g protein'
-    },
-    {
-      time: '🌙 Dinner',
-      name: 'Salmon + sweet potato + spinach',
-      macros: '544 cal · 41g protein'
-    }
-  ];
-
-
-  // =========================
-  // REGENERATE MEAL PLAN
-  // =========================
-
-  regenerateMeal(): void {
-    alert('AI regenerating meal plan for Sarah M...');
-
-    // Later:
-    // OpenAI API call will go here.
+  get selectedClient() {
+    return this.clients().find(c => c.id === this.selectedClientId()) ?? this.clients()[0];
   }
-  
+
+  viewClient(id: number) {
+    this.router.navigate(['/clients', id]);
+  }
+
+  generateDashboardMeal() {
+    const client = this.selectedClient;
+    if (!client) return;
+
+    this.isGenerating.set(true);
+    this.mealError.set(null);
+    this.mealPlan.set(null);
+
+    this.openAiService.generateMealPlan(
+      client.name,
+      client.goal,
+      client.calories,
+      client.restrictions
+    ).subscribe({
+      next:  plan => { this.mealPlan.set(plan);          this.isGenerating.set(false); },
+      error: err  => { this.mealError.set(err.message);  this.isGenerating.set(false); }
+    });
+  }
+
+  selectMealClient(id: number) {
+    this.selectedClientId.set(id);
+    this.mealPlan.set(null);
+    this.mealError.set(null);
+  }
 }

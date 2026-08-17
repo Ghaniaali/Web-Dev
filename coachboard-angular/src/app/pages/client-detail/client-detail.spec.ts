@@ -1,19 +1,17 @@
-/// <reference types="jasmine" />
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Progress } from './progress';
+import { ClientDetail } from './client-detail';
 
-describe('Progress', () => {
-  let component: Progress;
-  let fixture: ComponentFixture<Progress>;
+describe('ClientDetail', () => {
+  let component: ClientDetail;
+  let fixture: ComponentFixture<ClientDetail>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Progress]
+      imports: [ClientDetail]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Progress);
+    fixture = TestBed.createComponent(ClientDetail);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

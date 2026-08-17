@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Sidebar } from './sidebar';
 
+const { beforeEach, describe, expect, it } = globalThis as any;
+
 describe('Sidebar', () => {
   let component: Sidebar;
   let fixture: ComponentFixture<Sidebar>;

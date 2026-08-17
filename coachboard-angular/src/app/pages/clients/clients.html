@@ -1,1 +1,124 @@
-<p>clients works!</p>
+<!-- Modal Overlay -->
+@if (showModal()) {
+  <app-client-modal
+    [mode]="modalMode()"
+    [client]="editTarget()"
+    (saved)="onModalSaved()"
+    (closed)="onModalClosed()"
+  />
+}
+
+<!-- Page Header -->
+<div class="page-header-row">
+  <div>
+    <h1 class="page-title">Clients</h1>
+    <p class="page-subtitle">Manage and track all your fitness clients.</p>
+  </div>
+  <button class="add-btn" (click)="openAddModal()">+ Add Client</button>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-row">
+  <div class="summary-card">
+    <span class="summary-number">{{ totalCount }}</span>
+    <span class="summary-label">Total Clients</span>
+  </div>
+  <div class="summary-card">
+    <span class="summary-number" style="color: var(--accent-green)">{{ onTrackCount }}</span>
+    <span class="summary-label">On Track</span>
+  </div>
+  <div class="summary-card">
+    <span class="summary-number" style="color: var(--warning)">{{ atRiskCount }}</span>
+    <span class="summary-label">At Risk</span>
+  </div>
+  <div class="summary-card">
+    <span class="summary-number" style="color: var(--danger)">{{ offTrackCount }}</span>
+    <span class="summary-label">Off Track</span>
+  </div>
+</div>
+
+<!-- Search + Filter -->
+<div class="controls-row">
+  <div class="search-box">
+    <span>🔍</span>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by name..."
+      [value]="searchQuery()"
+      (input)="setSearch($any($event.target).value)"
+    />
+  </div>
+
+  <div class="filter-row">
+    @for (goal of goals; track goal) {
+      <button
+        class="filter-btn"
+        [class.active]="filterGoal() === goal"
+        (click)="setFilter(goal)"
+      >{{ goal }}</button>
+    }
+  </div>
+</div>
+
+<!-- Client Cards Grid -->
+<div class="grid">
+  @for (client of filteredClients(); track client.id) {
+    <div class="client-card" (click)="viewProfile(client)">
+
+      <!-- Card Top -->
+      <div class="card-top">
+        <div class="avatar">{{ client.avatar }}</div>
+        <div class="name-col">
+          <span class="client-name">{{ client.name }}</span>
+          <span class="client-goal">{{ client.goal }}</span>
+        </div>
+        <span
+          class="status-tag"
+          [ngStyle]="{ color: client.statusColor, borderColor: client.statusColor }"
+        >{{ client.status }}</span>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-strip">
+        <div class="stat-item">
+          <span class="stat-val">{{ client.adherence }}%</span>
+          <span class="stat-lbl">Adherence</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">{{ client.sessions }}</span>
+          <span class="stat-lbl">Sessions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">{{ client.weight }}{{ client.weightUnit }}</span>
+          <span class="stat-lbl">Weight</span>
+        </div>
+      </div>
+
+      <!-- Adherence Bar -->
+      <div class="bar-track">
+        <div
+          class="bar-fill"
+          [ngStyle]="{ width: client.adherence + '%', background: client.statusColor }"
+        ></div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <span class="checkin-text">{{ client.lastCheckin }}</span>
+        <div class="action-row" (click)="$event.stopPropagation()">
+          <button class="btn-edit"   (click)="openEditModal(client, $event)">Edit</button>
+          <button class="btn-delete" (click)="deleteClient(client, $event)">Delete</button>
+          <button class="btn-view"   (click)="viewProfile(client)">View →</button>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  @if (filteredClients().length === 0) {
+    <div class="no-results">
+      <p>No clients found. Try a different search or filter.</p>
+    </div>
+  }
+</div>

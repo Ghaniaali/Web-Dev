@@ -1,1 +1,273 @@
-<p>meal-plan works!</p>
+<!-- Page Header — Different from Dashboard -->
+<div class="mp-header">
+  <div>
+    <h1 class="page-title">AI Meal Planner</h1>
+    <p class="page-subtitle">
+      Generate personalized nutrition plans powered by
+    </p>
+  </div>
+  <div class="mp-header-badge">
+    <span class="ai-badge"></span>
+  </div>
+</div>
+
+<!-- Main Two-Panel Layout -->
+<div class="mp-layout">
+
+  <!-- ========================
+       LEFT PANEL — Client Selector + History
+  ======================== -->
+  <div class="left-panel">
+
+    <!-- Client Selector -->
+    <div class="panel-card">
+      <h3 class="panel-title">Select Client</h3>
+      <div class="client-list">
+        @for (client of clients(); track client.id) {
+          <div
+            class="client-row"
+            [class.selected]="selectedClient().id === client.id"
+            (click)="selectClient(client)"
+          >
+            <div class="mini-avatar">{{ client.avatar }}</div>
+            <div class="row-info">
+              <span class="row-name">{{ client.name }}</span>
+              <span class="row-meta">{{ client.goal }} · {{ client.calories }} cal</span>
+            </div>
+            <span
+              class="row-dot"
+              [ngStyle]="{ background: client.statusColor }"
+            ></span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Client Details Card -->
+    <div class="panel-card">
+      <h3 class="panel-title">Client Details</h3>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <span class="dr-label">Goal</span>
+          <span class="dr-value">{{ selectedClient().goal }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="dr-label">Calories</span>
+          <span class="dr-value accent">{{ selectedClient().calories }} cal/day</span>
+        </div>
+        <div class="detail-row">
+          <span class="dr-label">Weight</span>
+          <span class="dr-value">{{ selectedClient().weight }}{{ selectedClient().weightUnit }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="dr-label">Streak</span>
+          <span class="dr-value">🔥 {{ selectedClient().streak }} days</span>
+        </div>
+        <div class="detail-row">
+          <span class="dr-label">Restrictions</span>
+          <span class="dr-value">
+            {{ selectedClient().restrictions.length > 0
+               ? selectedClient().restrictions.join(', ')
+               : 'None' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generation History -->
+    @if (history().length > 0) {
+      <div class="panel-card">
+        <h3 class="panel-title">Recent Plans</h3>
+        <div class="history-list">
+          @for (item of history(); track item.time) {
+            <div class="history-item" (click)="loadFromHistory(item)">
+              <div class="history-info">
+                <span class="history-name">{{ item.client }}</span>
+                <span class="history-time">{{ item.time }}</span>
+              </div>
+              <span class="history-cal">{{ item.plan.totalCalories }} cal</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+  </div>
+
+  <!-- ========================
+       RIGHT PANEL — AI Generation Studio
+  ======================== -->
+  <div class="right-panel">
+
+    <!-- Generate Button Area -->
+    <div class="generate-area">
+      <div class="generate-info">
+        <div class="generate-avatar">{{ selectedClient().avatar }}</div>
+        <div>
+          <h3 class="generate-name">{{ selectedClient().name }}</h3>
+          <p class="generate-sub">
+            {{ selectedClient().goal }} plan ·
+            {{ selectedClient().calories }} cal target
+          </p>
+        </div>
+      </div>
+      <button
+        class="gen-btn"
+        [class.loading]="isLoading()"
+        [disabled]="isLoading()"
+        (click)="generateMealPlan()"
+      >
+        @if (isLoading()) {
+          <span class="btn-spinner"></span>
+          Generating...
+        } @else if (hasGenerated()) {
+          ✨ Regenerate Plan
+        } @else {
+          ✨ Generate AI Meal Plan
+        }
+      </button>
+    </div>
+
+    <!-- Error State -->
+    @if (error()) {
+      <div class="error-banner">
+        <span>⚠️</span>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <!-- Loading Skeleton -->
+    @if (isLoading()) {
+      <div class="skeleton-area">
+        <div class="sk-summary">
+          <div class="sk-block tall"></div>
+          <div class="sk-block tall"></div>
+          <div class="sk-block tall"></div>
+        </div>
+        <div class="sk-meals">
+          @for (i of [1,2,3]; track i) {
+            <div class="sk-meal-card">
+              <div class="sk-block short"></div>
+              <div class="sk-block long"></div>
+              <div class="sk-block medium"></div>
+              <div class="sk-macros">
+                <div class="sk-macro"></div>
+                <div class="sk-macro"></div>
+                <div class="sk-macro"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading() && !mealPlan() && !error()) {
+      <div class="empty-studio">
+        <div class="empty-icon">🥗</div>
+        <h3>Ready to generate</h3>
+        <p>
+          Select a client and click Generate. The AI will create a
+          personalized meal plan based on their goal, calorie target,
+          and dietary restrictions.
+        </p>
+        <div class="empty-features">
+          <div class="ef-item">⚡ Takes 3-5 seconds</div>
+          <div class="ef-item">🎯 Goal-specific macros</div>
+          <div class="ef-item">🌿 Respects restrictions</div>
+          <div class="ef-item">♻️ Regenerate anytime</div>
+        </div>
+      </div>
+    }
+
+    <!-- Generated Meal Plan -->
+    @if (mealPlan(); as plan) {
+
+      <!-- Calorie Summary Bar -->
+      <div class="calorie-bar-card">
+        <div class="cb-item">
+          <span class="cb-val green">{{ plan.totalCalories }}</span>
+          <span class="cb-lbl">Generated Calories</span>
+        </div>
+        <div class="cb-divider"></div>
+        <div class="cb-item">
+          <span class="cb-val">{{ selectedClient().calories }}</span>
+          <span class="cb-lbl">Daily Target</span>
+        </div>
+        <div class="cb-divider"></div>
+        <div class="cb-item">
+          <span class="cb-val purple">{{ plan.totalProtein }}g</span>
+          <span class="cb-lbl">Total Protein</span>
+        </div>
+        <div class="cb-divider"></div>
+        <div class="cb-item">
+          <span
+            class="cb-val"
+            [ngStyle]="{ color: proteinPercent > 100 ? '#FF4757' : '#00E096' }"
+          >
+            {{ proteinPercent }}%
+          </span>
+          <span class="cb-lbl">Of Target Met</span>
+        </div>
+      </div>
+
+      <!-- Meals Grid -->
+      <div class="meals-grid">
+        @for (meal of mainMeals; track meal.key) {
+          <div class="meal-card">
+
+            <div class="meal-top">
+              <span class="meal-emoji">{{ meal.icon }}</span>
+              <div class="meal-top-info">
+                <span class="meal-type">{{ meal.label }}</span>
+                <span class="meal-cal-badge">{{ meal.data.calories }} cal</span>
+              </div>
+            </div>
+
+            <h4 class="meal-name">{{ meal.data.name }}</h4>
+
+            <div class="macros-strip">
+              <div class="macro-block protein">
+                <span class="mb-val">{{ meal.data.protein }}g</span>
+                <span class="mb-lbl">Protein</span>
+              </div>
+              <div class="macro-block carbs">
+                <span class="mb-val">{{ meal.data.carbs }}g</span>
+                <span class="mb-lbl">Carbs</span>
+              </div>
+              <div class="macro-block fats">
+                <span class="mb-val">{{ meal.data.fats }}g</span>
+                <span class="mb-lbl">Fats</span>
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <!-- Snacks Section -->
+     @if (plan.snacks && plan.snacks.length > 0) {
+        <div class="snacks-card">
+          <h3 class="snacks-title">🥜 Snacks</h3>
+          <div class="snacks-flex">
+            @for (snack of plan.snacks; track snack.name) {
+              <div class="snack-pill">
+                <span class="snack-name">{{ snack.name }}</span>
+                <div class="snack-stats">
+                  <span>{{ snack.calories }} cal</span>
+                  <span>·</span>
+                  <span>{{ snack.protein }}g P</span>
+                  <span>·</span>
+                  <span>{{ snack.carbs }}g C</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,132 @@
+<!-- Backdrop -->
+<div class="backdrop" (click)="close()"></div>
+
+<!-- Modal -->
+<div class="modal">
+
+  <div class="modal-header">
+    <h2 class="modal-title">{{ title }}</h2>
+    <button class="close-btn" (click)="close()">✕</button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label class="label">Full Name *</label>
+        <input
+          class="input"
+          type="text"
+          placeholder="e.g. Sarah Mitchell"
+          [value]="form().name"
+          (input)="updateField('name', $any($event.target).value)"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">Email</label>
+        <input
+          class="input"
+          type="email"
+          placeholder="client@email.com"
+          [value]="form().email"
+          (input)="updateField('email', $any($event.target).value)"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">Phone</label>
+        <input
+          class="input"
+          type="text"
+          placeholder="+1 555 0000"
+          [value]="form().phone"
+          (input)="updateField('phone', $any($event.target).value)"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">Fitness Goal</label>
+        <select
+          class="input"
+          [value]="form().goal"
+          (change)="updateField('goal', $any($event.target).value)"
+        >
+          @for (goal of goals; track goal) {
+            <option [value]="goal">{{ goal }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label">Daily Calorie Target</label>
+        <input
+          class="input"
+          type="number"
+          placeholder="2000"
+          [value]="form().calories"
+          (input)="updateField('calories', $any($event.target).value)"
+        />
+      </div>
+
+      <div class="field field-row">
+        <div class="field" style="flex:1">
+          <label class="label">Current Weight</label>
+          <input
+            class="input"
+            type="number"
+            placeholder="70"
+            [value]="form().weight"
+            (input)="updateField('weight', $any($event.target).value)"
+          />
+        </div>
+        <div class="field" style="width: 90px">
+          <label class="label">Unit</label>
+          <select
+            class="input"
+            [value]="form().weightUnit"
+            (change)="updateField('weightUnit', $any($event.target).value)"
+          >
+            <option value="kg">kg</option>
+            <option value="lbs">lbs</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field full-width">
+        <label class="label">Dietary Restrictions</label>
+        <input
+          class="input"
+          type="text"
+          placeholder="e.g. Gluten-free, Dairy-free (comma separated)"
+          [value]="form().restrictions"
+          (input)="updateField('restrictions', $any($event.target).value)"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label class="label">Coach Notes</label>
+        <textarea
+          class="input textarea"
+          placeholder="Any important notes about this client..."
+          [value]="form().notes"
+          (input)="updateField('notes', $any($event.target).value)"
+        ></textarea>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="cancel-btn" (click)="close()">Cancel</button>
+    <button
+      class="save-btn"
+      (click)="save()"
+    >
+      {{ mode === 'add' ? 'Add Client' : 'Save Changes' }}
+    </button>
+  </div>
+
+</div>

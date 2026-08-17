@@ -1,187 +1,146 @@
-<div class="dashboard">
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-subtitle">Welcome back. Here's your client overview.</p>
+</div>
 
-  <!-- =========================
-       PAGE HEADER
-       ========================= -->
-  <div class="page-header">
-    <h1 class="page-title">Dashboard</h1>
-    <p class="page-subtitle">
-      Welcome back. Here's your client overview.
-    </p>
+<!-- Stat Cards (dynamic) -->
+<div class="stats-row">
+  <div class="stat-card">
+    <span class="stat-label">ACTIVE CLIENTS</span>
+    <span class="stat-value">{{ totalClients }}</span>
+    <span class="stat-sub" style="color: var(--accent-green)">All time</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">AVG ADHERENCE</span>
+    <span class="stat-value">{{ avgAdherence }}%</span>
+    <span class="stat-sub" style="color: var(--accent-green)">Across all clients</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">CHECK-INS TODAY</span>
+    <span class="stat-value">9</span>
+    <span class="stat-sub" style="color: var(--warning)">3 pending review</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">NEED ATTENTION</span>
+    <span class="stat-value">{{ atRiskCount }}</span>
+    <span class="stat-sub" style="color: var(--danger)">At risk or off track</span>
+  </div>
+</div>
+
+<div class="dashboard-bottom">
+
+  <!-- Client Table -->
+  <div class="card">
+    <h3 class="card-title">Client Overview</h3>
+    <table class="client-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Goal</th>
+          <th>Last Check-in</th>
+          <th>Adherence</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (client of recentClients; track client.id) {
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:10px">
+                <div class="table-avatar">{{ client.avatar }}</div>
+                {{ client.name }}
+              </div>
+            </td>
+            <td>{{ client.goal }}</td>
+            <td>{{ client.lastCheckin }}</td>
+            <td>{{ client.adherence }}%</td>
+            <td>
+              <span
+                class="status-badge"
+                [ngStyle]="{ color: client.statusColor, borderColor: client.statusColor }"
+              >
+                {{ client.status }}
+              </span>
+            </td>
+            <td>
+              <button class="view-btn" (click)="viewClient(client.id)">
+                View →
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
 
+  <!-- AI Meal Widget -->
+  <div class="meal-card">
+    <h3 class="card-title">AI Meal Plan</h3>
 
-  <!-- =========================
-       STAT CARDS
-       ========================= -->
-  <div class="stats-row">
+    <!-- Client Picker -->
+    <select
+      class="meal-select"
+      [value]="selectedClientId()"
+      (change)="selectMealClient(+$any($event.target).value)"
+    >
+      @for (c of clients(); track c.id) {
+        <option [value]="c.id">{{ c.name }}</option>
+      }
+    </select>
 
-    @for (stat of stats; track stat.label) {
-      <div class="stat-card">
+    <p class="meal-subtitle">
+      {{ selectedClient.goal }} · {{ selectedClient.calories }} cal
+    </p>
 
-        <span class="stat-label">
-          {{ stat.label }}
-        </span>
+    <!-- Error -->
+    @if (mealError()) {
+      <div class="meal-error">⚠️ {{ mealError() }}</div>
+    }
 
-        <div class="stat-main">
-          <span class="stat-value">
-            {{ stat.value }}
-          </span>
-
-          <span
-            class="stat-sub"
-            [style.color]="stat.subColor">
-            {{ stat.sub }}
-          </span>
-        </div>
-
+    <!-- Generated Plan -->
+    @if (mealPlan(); as plan) {
+      <div class="meal-item">
+        <span class="meal-time">🌅 Breakfast</span>
+        <span class="meal-name">{{ plan.breakfast.name }}</span>
+        <span class="meal-macros">{{ plan.breakfast.calories }} cal · {{ plan.breakfast.protein }}g protein</span>
+      </div>
+      <div class="meal-item">
+        <span class="meal-time">☀️ Lunch</span>
+        <span class="meal-name">{{ plan.lunch.name }}</span>
+        <span class="meal-macros">{{ plan.lunch.calories }} cal · {{ plan.lunch.protein }}g protein</span>
+      </div>
+      <div class="meal-item">
+        <span class="meal-time">🌙 Dinner</span>
+        <span class="meal-name">{{ plan.dinner.name }}</span>
+        <span class="meal-macros">{{ plan.dinner.calories }} cal · {{ plan.dinner.protein }}g protein</span>
       </div>
     }
 
-  </div>
+    <!-- Placeholder -->
+    @if (!mealPlan() && !isGenerating() && !mealError()) {
+      <div class="meal-placeholder">
+        Click below to generate an AI meal plan
+      </div>
+    }
 
+    <!-- Loading -->
+    @if (isGenerating()) {
+      <div class="meal-loading">
+        <div class="mini-spinner"></div>
+        Generating plan...
+      </div>
+    }
 
-  <!-- =========================
-       BOTTOM SECTION
-       CLIENT TABLE + AI MEAL PLAN
-       ========================= -->
-  <div class="dashboard-bottom">
-
-
-    <!-- =========================
-         CLIENT OVERVIEW CARD
-         ========================= -->
-    <div class="card client-card">
-
-      <h2 class="card-title">
-        Client Overview
-      </h2>
-
-      <table class="client-table">
-
-        <thead>
-          <tr>
-            <th>Client Name</th>
-            <th>Goal</th>
-            <th>Last Check-in</th>
-            <th>Adherence</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          @for (client of clients; track client.name) {
-
-            <tr>
-
-              <!-- Client Name -->
-              <td>
-                {{ client.name }}
-              </td>
-
-              <!-- Goal -->
-              <td>
-                {{ client.goal }}
-              </td>
-
-              <!-- Last Check-in -->
-              <td>
-                {{ client.lastCheckin }}
-              </td>
-
-              <!-- Adherence -->
-              <td>
-                {{ client.adherence }}%
-              </td>
-
-              <!-- Status -->
-              <td>
-
-                <span
-                  class="status-badge"
-                  [style.color]="client.statusColor">
-
-                  <span
-                    class="status-dot"
-                    [style.background-color]="client.statusColor">
-                  </span>
-
-                  {{ client.status }}
-
-                </span>
-
-              </td>
-
-              <!-- Action -->
-              <td>
-                <button class="view-btn">
-                  View
-                </button>
-              </td>
-
-            </tr>
-
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-
-
-    <!-- =========================
-         AI MEAL PLAN CARD
-         ========================= -->
-    <div class="meal-card">
-
-      <h2 class="card-title">
-        AI Meal Plan — Sarah M.
-      </h2>
-
-      <p class="meal-subtitle">
-        Goal: Weight Loss · 1,800 cal target
-      </p>
-
-
-      <!-- Meals -->
-
-      @for (meal of meals; track meal.name) {
-
-        <div class="meal-item">
-
-          <div class="meal-time">
-            {{ meal.time }}
-          </div>
-
-          <div class="meal-name">
-            {{ meal.name }}
-          </div>
-
-          <div class="meal-macros">
-            {{ meal.macros }}
-          </div>
-
-        </div>
-
-      }
-
-
-      <!-- Regenerate Button -->
-
-      <button
-        class="regenerate-btn"
-        (click)="regenerateMeal()">
-
-        Regenerate with AI ✨
-
-      </button>
-
-    </div>
-
+    <button
+      class="regenerate-btn"
+      [disabled]="isGenerating()"
+      (click)="generateDashboardMeal()"
+    >
+      @if (isGenerating()) { Generating... }
+      @else if (mealPlan()) { ✨ Regenerate Plan }
+      @else { ✨ Generate AI Meal Plan }
+    </button>
   </div>
 
 </div>
